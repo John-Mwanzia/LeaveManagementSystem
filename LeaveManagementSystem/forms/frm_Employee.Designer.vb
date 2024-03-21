@@ -63,7 +63,7 @@ Partial Class frm_Employee
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.ts_New = New System.Windows.Forms.ToolStripButton()
         Me.ts_Close = New System.Windows.Forms.ToolStripButton()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.ToolStripButton()
         Me.GroupBox9.SuspendLayout()
         Me.GroupBox10.SuspendLayout()
         Me.ToolStrip1.SuspendLayout()
@@ -510,7 +510,7 @@ Partial Class frm_Employee
         '
         Me.ToolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.ToolStrip1.ImageScalingSize = New System.Drawing.Size(25, 25)
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ts_New, Me.ts_Close})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ts_New, Me.ts_Close, Me.Button1})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 441)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(891, 32)
@@ -537,19 +537,18 @@ Partial Class frm_Employee
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(78, 441)
+        Me.Button1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.Button1.Image = Global.LeaveManagementSystem.My.Resources.Resources.save
+        Me.Button1.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 37
-        Me.Button1.Text = "SAVE"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.Button1.Size = New System.Drawing.Size(29, 29)
+        Me.Button1.Text = "Save"
         '
         'frm_Employee
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(891, 473)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.ToolStrip1)
         Me.Controls.Add(Me.emptitle)
         Me.Controls.Add(Me.GroupBox9)
@@ -608,5 +607,5 @@ Partial Class frm_Employee
     Friend WithEvents ToolStrip1 As ToolStrip
     Friend WithEvents ts_New As ToolStripButton
     Friend WithEvents ts_Close As ToolStripButton
-    Friend WithEvents Button1 As Button
+    Friend WithEvents Button1 As ToolStripButton
 End Class
