@@ -39,15 +39,17 @@
             '  MsgBox(ex.Message)
         End Try
     End Sub
-    Private Sub dtpenddate_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles dtpenddate.ValueChanged, dtpdatestart.ValueChanged
+    Private Sub dtpenddate_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles dtpenddate.ValueChanged, dtpdatestart.ValueChanged  'subroutine is triggered when the value of either dtpenddate or dtpdatestart date picker controls changes.
         Try
-
+            'Calculates the number of days between the selected start date (dtpdatestart) and end date (dtpenddate) and assigns the result to a textbox named txtnoDays.
             txtnoDays.Text = DateDiff(DateInterval.Day, dtpdatestart.Value, dtpenddate.Value)
 
+            'Calculates the number of days between the selected start and end dates again and stores it in the variable numdays.
             Dim numdays As Integer
 
             numdays = DateDiff(DateInterval.Day, dtpdatestart.Value, dtpenddate.Value)
 
+            'Checks if the number of days is greater than zero. If so, it disables the time picker controls (dtpTimeFrom and dtpTimeTo) because it implies that the leave duration is more than a single day. Otherwise, it enables them.
             If numdays > 0 Then
                 dtpTimeFrom.Enabled = False
                 dtpTimeTo.Enabled = False
@@ -60,7 +62,7 @@
         End Try
     End Sub
 
-    Private Sub frm_ApplyLeave_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub frm_ApplyLeave_Load(sender As Object, e As EventArgs) Handles MyBase.Load  ' subroutine is executed when the form (frm_ApplyLeave) loads.
         Try
             'For Each rdo As Control In GroupBox2.Controls
             '    If TypeOf rdo Is RadioButton Then
@@ -68,6 +70,7 @@
             '    End If
             'Next
             '---------------------------------------
+            'Sets the format of the time picker control dtpTimeFrom to display only the time and enables the option to select time directly from the control.
             dtpTimeFrom.Format = DateTimePickerFormat.Time
             dtpTimeFrom.ShowUpDown = True
             '----------------------------------
@@ -81,7 +84,9 @@
         End Try
     End Sub
 
-    Private Sub ts_New_Click(sender As Object, e As EventArgs) Handles ts_New.Click
+    Private Sub ts_New_Click(sender As Object, e As EventArgs) Handles ts_New.Click  'associated with a "New" or "Reset" functionality.
+
+        ' functions clears the text content of the controls contained within the specified group boxes and the form.
         cleartext(GroupBox1)
         cleartext(GroupBox2)
         cleartext(GroupBox3)
@@ -89,6 +94,7 @@
         cleartext(GroupBox5)
         cleartext(Me)
 
+        'Loops through each control within GroupBox2. For each control, it checks if it's a radio button. If it is, it disables the radio button (rdo.Enabled = False) and unchecks it (TryCast(rdo, RadioButton).Checked = False).
         For Each rdo As Control In GroupBox2.Controls
             If TypeOf rdo Is RadioButton Then
                 rdo.Enabled = False
@@ -98,12 +104,15 @@
             End If
         Next
 
-
+        'unchecks two specific radio buttons rdoWithoutPay and rdowithPay.
         rdoWithoutPay.Checked = False
         rdowithPay.Checked = False
     End Sub
 
     Private Sub ts_Save_Click(sender As Object, e As EventArgs) Handles ts_Save.Click
+        'triggered when a button named ts_Save is clicked. It handles the process of saving leave application details.
+
+
         Try
 
             'For Each grp As Control In Me.Controls
@@ -125,6 +134,9 @@
             '        Next
             '    End If
             'Next
+
+            'Checks if none of the radio buttons representing different types of leave (e.g., Sick, Vacation, Funeral) are selected. If none are selected, it displays an error message prompting the user to choose a leave type and exits the subroutine.
+
             If rdoAcidentOnDuty.Checked = False And rdoPaternity.Checked = False And rdoMaternity.Checked = False _
              And rdoVacation.Checked = False And rdoFuneral.Checked = False And rdoSick.Checked = False Then
                 MessageBox.Show("Please choose your leave applied for.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -156,6 +168,8 @@
                 rdoleaveapplied = "AccidentOnDuty"
             End If
             ''----------------------------------------------------
+
+            'Calculates the duration of the leave in days (day). If the leave duration is less than a day, it calculates it based on the difference in hours between the start and end times.
             Dim day As Double
             Dim numdays As Integer
             Dim numtime As Integer
@@ -175,6 +189,7 @@
 
 
             ''------------------------------------------
+            'SQL query to insert the leave application details into the leave table in the database.  executes this query using the create function.
             sql = "INSERT INTO `leave` (`EMPID`,`LEAVECODE`,`LEAVEFORMAT`, `LEAVEAPPLIED`, `DATEFROM`, `DATETO`,`LEAVEDATE`,`LEAVEENDDATE`, `NODAYS`, `REASON`,  `DAYOFFSCHEDULE`,`REMARKS`,`APPLIED`,`STATUS`) " _
             & "VALUES ('" & txtEmployeeId.Text & "','" & lblcode.Text & "','" & rdoleaveformat & "','" & rdoleaveapplied & "','" & Format(dtpTimeFrom.Value, "yyyy-MM-dd hh:mm:ss tt") &
             "','" & Format(dtpTimeTo.Value, "yyyy-MM-dd hh:mm:ss tt") & "','" & Format(dtpdatestart.Value, "yyyy-MM-dd hh:mm:ss tt") & "','" & Format(dtpenddate.Value, "yyyy-MM-dd hh:mm:ss tt") & "'," & day &
@@ -183,10 +198,14 @@
 
 
             ''------------------------------------------
+            'SQL query to update the employee's status to on leave and decrease their remaining leave days in the database. It then executes this query using the createNoMsg function.
             sql = "UPDATE `employee` set `ONLEAVE`=1 ,`REMAININGLEAVE` =`REMAININGLEAVE`- " & day & " WHERE `EMPID`='" & txtemid.Text & "'"
             createNoMsg(sql)
             '-----------------------------------------
+            'Updates the autonumber for application codes.
             updateautonumber("applicationcode")
+
+            'Calls the ts_New_Click subroutine to reset the form for a new leave application.
             Call ts_New_Click(sender, e)
         Catch ex As Exception
             MsgBox(ex.Message)
