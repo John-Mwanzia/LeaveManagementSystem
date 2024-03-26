@@ -185,7 +185,7 @@
     End Sub
 
     Private Sub frm_Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        fillcbo("SELECT * FROM `tblsettings` WHERE  `FORTHE`='Position'", txtposition)
+        fillcbo("SELECT * FROM `tblsettings` WHERE  `FORTHE`='Position'", txtposition)  'query the tblsettings for the positions fill the select options of the txtposition combo box when the form loads
         cleartext(GroupBox9)
         cleartext(GroupBox10)
         fillcbo("SELECT `DEPARTMENT` FROM `tbldepartment` ", cbodeaprtment)
